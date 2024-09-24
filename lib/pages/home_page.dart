@@ -12,6 +12,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //controller for text field
+  final controler = TextEditingController();
+
   //list of todo tasks
   List toDoList = [
     ["Make something", false],
@@ -28,7 +31,9 @@ class _HomePageState extends State<HomePage> {
     showDialog(
         context: context,
         builder: (context) {
-          return DialogBox();
+          return DialogBox(
+            controler: controler,
+          );
         });
   }
 
