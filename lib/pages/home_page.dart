@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
 import 'package:todoapp/util/dialog_box.dart';
@@ -27,12 +27,22 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void saveNewTask() {
+    setState(() {
+      toDoList.add([controler.text, false]);
+      controler.clear();
+      Navigator.of(context).pop();
+    });
+  }
+
   void createNewTask() {
     showDialog(
         context: context,
         builder: (context) {
           return DialogBox(
             controler: controler,
+            onSave: saveNewTask,
+            onCancel: () => Navigator.of(context).pop(),
           );
         });
   }
@@ -47,7 +57,11 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewTask,
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView.builder(
         itemCount: toDoList.length,
