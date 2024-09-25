@@ -15,23 +15,37 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   //reference the hive box
-  final box = Hive.openBox('todoBox');
+  final box = Hive.box('todoBox');
   ToDoDataBase toDoDataBase = ToDoDataBase();
   //controller for text field
   final controler = TextEditingController();
+
+  @override
+  void initState() {
+    //if this is the first time opening the app, create initial data, else load data
+    if (box.get("TODOLIST") == null) {
+      toDoDataBase.createInitialData();
+      toDoDataBase.updateData();
+    } else {
+      toDoDataBase.loadData();
+    }
+    super.initState();
+  }
 
   void checkBoxChanged(bool? value, int index) {
     setState(() {
       toDoDataBase.toDoList[index][1] = !toDoDataBase.toDoList[index][1];
     });
+    toDoDataBase.updateData();
   }
 
   void saveNewTask() {
     setState(() {
       toDoDataBase.toDoList.add([controler.text, false]);
       controler.clear();
-      Navigator.of(context).pop();
     });
+    Navigator.of(context).pop();
+    toDoDataBase.updateData();
   }
 
   void createNewTask() {
@@ -50,6 +64,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       toDoDataBase.toDoList.removeAt(index);
     });
+    toDoDataBase.updateData();
   }
 
   @override
